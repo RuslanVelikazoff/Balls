@@ -40,10 +40,12 @@ public class BallLauncher : MonoBehaviour
 
     private void Update()
     {
-        if (ballsReady != balls.Count) // don't let the player launch until all balls are back.
+        if (ballsReady != balls.Count)
             return;
 
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Vector3.back * -10;
+
+        #region PC
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -57,6 +59,35 @@ public class BallLauncher : MonoBehaviour
         {
             EndDrag();
         }
+
+        #endregion
+
+        #region Android
+
+        if (Input.touchCount > 0)
+        {
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                ContinueDrag(worldPosition);
+            }
+
+            else if (Input.touches[0].phase == TouchPhase.Moved)
+            {
+                ContinueDrag(worldPosition);
+            }
+
+            else if (Input.touches[0].phase == TouchPhase.Ended)
+            {
+                EndDrag();
+            }
+
+            else if (Input.touches[0].phase == TouchPhase.Canceled)
+            {
+                EndDrag();
+            }
+        }
+
+        #endregion
     }
 
     private void EndDrag()

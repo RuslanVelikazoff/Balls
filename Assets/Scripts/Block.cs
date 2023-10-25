@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class Block : MonoBehaviour
@@ -10,10 +9,13 @@ public class Block : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private TextMeshPro text;
 
+    private LevelUIManager levelUIManager;
+
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         text = GetComponentInChildren<TextMeshPro>();
+        levelUIManager = FindObjectOfType<LevelUIManager>();
         UpdateVisualState();
     }
 
@@ -28,9 +30,17 @@ public class Block : MonoBehaviour
         hitsRemaining--;
 
         if (hitsRemaining > 0)
+        {
             UpdateVisualState();
+            AudioManager.instance.Play("Hit");
+        }
         else
+        {
             Destroy(gameObject);
+            AudioManager.instance.Play("Destroy");
+            levelUIManager.addScore(1);
+        }
+
     }
 
     internal void SetHits(int hits)
